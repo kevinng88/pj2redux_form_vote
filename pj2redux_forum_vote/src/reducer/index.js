@@ -7,7 +7,6 @@ function post (state = {}, action){
 
             return {
                 ...state,
-                [title]: title,
                 title: title,
                 body: body,
             }
