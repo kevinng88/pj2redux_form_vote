@@ -3,10 +3,25 @@ import logo from './logo.svg';
 import './App.css';
 import { connect } from 'react-redux';
 import { addPost } from '../action'
+import * as api from '../util/api'
 
 class App extends Component {
   
+  state = { categories:"" }
+
+  
+
+ 
+  componentDidMount() {
+      api.getAllcategories().then(
+          data => this.setState({ categories: data }))
+      }
+
   render() {
+
+  
+    
+    
 
     const { addingPost } = this.props;
 
@@ -25,6 +40,9 @@ class App extends Component {
           title: this.titleinput.value, 
           body: this.bodyinput.value,
           })}}>add data to store</button>
+        
+        <h3>test api</h3>
+        <p>{this.state.categories?this.state.categories.map(i=>(<li key={i.name}>{i.name}</li>)):'not yet fetch...'}</p>
       </div>
     );
   }
