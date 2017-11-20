@@ -9,11 +9,8 @@ class App extends Component {
   
   state = { categories:"" }
 
-  
-
- 
   componentDidMount() {
-      api.getAllcategories().then(
+      api.getAllPosts().then(
           data => this.setState({ categories: data }))
       }
 
@@ -42,7 +39,7 @@ class App extends Component {
           })}}>add data to store</button>
         
         <h3>test api</h3>
-        <p>{this.state.categories?this.state.categories.map(i=>(<li key={i.name}>{i.name}</li>)):'not yet fetch...'}</p>
+        <p>{this.state.categories?this.state.categories.map(i=>(<li key={i['author']}>{i.body}</li>)):'not yet fetch...'}</p>
       </div>
     );
   }

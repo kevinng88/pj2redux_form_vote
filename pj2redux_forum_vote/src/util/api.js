@@ -10,7 +10,19 @@ const headers = {
 }
 
 //API: to get all categories
-export const getAllcategories = () => fetch(`${link}/categories`, {headers})
+export const getAllCategories = () => fetch(`${link}/categories`, {headers})
     .then(response => {return response.json()})
     .then(data =>{return data.categories})
     .catch(err => console.log(err))
+
+export const getCategoryPosts = (category) => fetch(`${link}/${category}/posts`, {headers})
+    .then(response => {return response.json()})
+    .then(data =>{return data})
+    .catch(err => console.log(err))
+
+export const getAllPosts = () => fetch(`${link}/posts`, {headers})
+    .then(response => {return response.json()})
+    .then(data =>{return data})
+    .catch(err => console.log(err))
+
+
