@@ -3,7 +3,8 @@ import {ADD_POST } from '../action'
 const initialState = {
     posts: [],
     comments: [],
-    
+    title: "",
+    body:""
 
 }
 
