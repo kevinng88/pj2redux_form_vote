@@ -1,6 +1,13 @@
 import {ADD_POST } from '../action'
 
-function post (state = {}, action){
+const initialState = {
+    posts: [],
+    comments: [],
+    
+
+}
+
+function post (state = initialState, action){
     switch (action.type) {
         case ADD_POST :
             const { title, body } = action;
