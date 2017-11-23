@@ -1,26 +1,88 @@
-import {ADD_POST } from '../action'
+import {ADD_ALL_POST, ADD_POST, UPDATE_POST, DELETE_POST,
+    ADD_ALL_COMMENT,ADD_COMMENT,UPDATE_COMMENT,DELETE_COMMENT } from '../action'
+import { combineReducers } from 'redux'
 
-const initialState = {
+const initialPostState = {
     posts: [],
-    comments: [],
-    title: "",
-    body:""
+    post: {},
+    id: null,
+    title: null,
+    body: null,
 
 }
 
-function post (state = initialState, action){
+function post (state = initialPostState, action){
+    const { id, title, body, posts, post } = action;   
     switch (action.type) {
-        case ADD_POST :
-            const { title, body } = action;
+        case ADD_ALL_POST:
 
             return {
                 ...state,
-                title: title,
-                body: body,
+                posts: posts,
+                
+            }
+        case ADD_POST:
+            
+            return {
+                ...state,
+                posts: state.posts.concat(post),
+                
+            }
+        case UPDATE_POST :
+            const thisPost = state.posts.filter(p=>p.id === id)[0]
+            thisPost.title = title
+            thisPost.body = body
+            return {
+                ...state,
+                thisPost
+            }
+        case DELETE_POST :
+            return {
+                
+                posts: state.posts.filter(p=>p.id != id)
             }
         default :
             return state
     }
 }
 
-export default post;
+const intialCommentState = {
+    comments : [],
+    comment: {},
+    id: null,
+    body:null
+}
+
+function comment (state = intialCommentState, action) {
+    const { comments, id, body, comment } = action;
+    switch (action.type){
+    case ADD_ALL_COMMENT:
+        
+        return {
+            ...state,
+            comments: comments
+        }
+    case ADD_COMMENT:
+        return {
+            ...state,
+            comments: state.comments.concat(comment),
+            
+        }
+    case UPDATE_COMMENT:
+        const thisCmt = state.comments.filter(c=>c.id === id)[0]
+        thisCmt.body = body
+        return {
+            ...state,
+            thisCmt
+        }
+    case DELETE_COMMENT:
+        return {
+            
+            comments: state.comments.filter(c=>c.id != id)
+        }
+    default :
+        return state
+    }
+}
+
+export default combineReducers({post, comment});
