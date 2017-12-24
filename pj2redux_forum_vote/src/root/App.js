@@ -5,10 +5,13 @@ import { connect } from 'react-redux';
 import { addAllPosts, addPost, updatePost, deletePost, addAllComments, addComment, 
   updateComment, deleteComment } from '../action'
 import * as api from '../util/api'
+import { LoadCatagory, LoadAllPost, LoadCategoryPost } from '../util/loadListData'
+import Modal from 'react-modal'
+import sortBy from 'sort-by'
 
 class App extends Component {
   
-  state = { categories:null, posts:null, comments:"", response:"" }
+  state = { categories:null, posts:null, comments:"", response:"", addPostModalOpen: false, clickedCat:null, togglePostPage:false, postToOpen:null }
 
   componentDidMount() {
       ////// get post by id (done)////
@@ -25,6 +28,7 @@ class App extends Component {
            data => {
            //this.props.addingPost({ posts: data, title:"", body:"" })
            this.setState({ posts: data })
+           this.addRedux();
           })
 
       ////getAll comment from a post////
@@ -35,9 +39,11 @@ class App extends Component {
 
   }
   
+  // addAPost = (title, body, author, category) =>{
   addAPost = () =>{
     const id = Math.random().toString(36).slice(2)
-      api.addPost(id, 'test1','this is body', 'kev', 'react')
+      // api.addPost(id, title, body, author, category)
+      api.addPost(id, this.postTitleInput.value, this.postBodyInput.value, this.postAuthorInput.value, this.postCatSelect.value )
       .then(
         data=>{ this.setState({response: JSON.stringify(data)});
         api.getAllPosts().then(
@@ -111,7 +117,7 @@ changeCmtData = () => {
 
 }
 
-  getAPI = () => {
+getAPI = () => {
   //   api.getPostByID('8xf0y6ziyjabvozdd253nd').then(
   //     data => this.setState({ categories: data }))
     // api.getAllPosts().then(data=>{this.setState({post_data: data})
@@ -155,15 +161,38 @@ deleteReduxComment(){
   this.props._deleteComment({id: this.state.comments[1].id})
 }
 
+sortPostbyVote = (way) => {
+  //can either order by vote or by timestamp
+  if (this.state.posts !== null) {
+    let showPost = this.state.posts
+    way === 'vote' ? showPost.sort(sortBy('-voteScore')) : null;
+    way === 'time' ? showPost.sort(sortBy('-timestamp')) : null;
+    this.setState({ posts: showPost })
+  }
+}
+
+openAddPostModal = () => this.setState(()=> ({addPostModalOpen: true}))
+closeAddPostModal = () => this.setState(()=> ({addPostModalOpen: false}))
+
+changeClickedCat(category){
+  this.setState({ clickedCat: category})
+}
+
+switchToPostPage(selectedPost){
+  this.setState({
+    togglePostPage : true,
+    postToOpen : selectedPost
+  })
+}
+
   render() {
 
-  
-    
-    
 
     const {_addPost, _updatePost } = this.props;
+    const { categories, addPostModalOpen, posts, clickedCat, togglePostPage, postToOpen } = this.state;
 
     return (
+
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
@@ -178,12 +207,13 @@ deleteReduxComment(){
           title: this.titleinput.value, 
           body: this.bodyinput.value,
           })}}>add data to store</button>
+         
         
         <h3>test api</h3>
         {/* don't have map function */}
         <button onClick={this.changeCmtData.bind(this)}>Change Data</button>
         <button onClick={this.getAPI.bind(this)}>get API</button>
-        <button onClick={this.addAPost}>Add post</button>
+        <button onClick={this.openAddPostModal}>show Add post modal</button>
         <button onClick={this.addRedux.bind(this)}>Redux store</button>
         <br />
         <button onClick={this.addReduxPost.bind(this)}>add post</button>
@@ -199,6 +229,61 @@ deleteReduxComment(){
         {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
         {<p>{this.state.comments?this.state.comments.map(i=>(<li key={i['author']}>id: {i.id} body: {i.body} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>}
         <p>{this.state.response}</p>
+        
+        {/*-------------------------------- page 1 functions------------------------- */}
+
+        {/* P1: loading the catagories and all the posts */}
+        {this.state.categories !== null && (
+          <LoadCatagory 
+            catagory={this.state.categories} 
+            onSelect={(selectedCat) => {
+              //load P2 filered post 
+              this.changeClickedCat(selectedCat);
+            }}/>)}
+        {/* {this.state.posts !== null && (<LoadAllPost post={this.state.posts}/>)} */}
+
+        {/* button of sort post by votes and time (sort the posts state) */}
+        <button onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote</button>
+        <button onClick={this.sortPostbyVote.bind(this,'time')}>Sort by time</button>
+        
+        {/*-------------------------------- page 2 functions------------------------- */}
+        {/* show filter post by catagories */}
+        {/* {this.state.posts !== null && (<LoadAllPost catagory= post={this.state.posts}/>)} */}
+        {clickedCat? 
+          <LoadCategoryPost 
+            selectedCat={clickedCat} 
+            post={posts}
+            onSelect={(selectedPost)=>{
+              //load P3
+              this.switchToPostPage(selectedPost)
+            }}
+          />:null}
+
+        <Modal
+        //this is the modal of add a new post
+        className='modal'
+        overlayClassName='overlay'
+        isOpen={addPostModalOpen}
+        onRequestClose={this.closeAddPostModal}
+        contentLabel='Post Modal'
+        >
+          <h2>Add new Post here </h2>
+          <input type='text' placeholder='title' ref={(input) => this.postTitleInput = input}/>
+          {/* <input type='text' placeholder='title' value ={this.props.postTitle}/> */}
+          <input type='text' placeholder='body' ref={(input) => this.postBodyInput = input}/>
+          <input type='text' placeholder='author' ref={(input) => this.postAuthorInput = input}/>
+          <select name='categoryinput' ref = {(input) => this.postCatSelect = input}>
+            {(categories !== null)?categories.map(cat=>(
+                <option value={cat.name}>{cat.name}</option>
+            )):null}
+          </select>
+         
+          <button onClick={()=>{
+              this.addAPost()
+              this.closeAddPostModal
+            }}>add Post</button>
+          <button onClick={this.closeAddPostModal}>cancel</button>
+        </Modal>
       </div>
     );
   }

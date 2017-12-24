@@ -24,6 +24,28 @@ const defaultData = {
     voteScore: -5,
     deleted: false,
     commentCount: 0
+  },
+  "7rti6ok3ym7mf1p33lnez": {
+    id: '7rti6ok3ym7mf1p33lnez',
+    timestamp: 1475629768888,
+    title: 'How to use bind in button!',
+    body: 'Make a correct bind is a way to prevent infinite loop.',
+    author: 'thingfour',
+    category: 'react',
+    voteScore: 2,
+    deleted: false,
+    commentCount: 0
+  },
+  "654a6ok3ym9oq1p88leee": {
+    id: '654a6ok3ym9oq1p88leee',
+    timestamp: 136534511979,
+    title: 'Xmas is good time for coding!',
+    body: 'Don\'be lazy, there are always need to learn and code.',
+    author: 'kevin',
+    category: 'learn',
+    voteScore: 19,
+    deleted: false,
+    commentCount: 0
   }
 }
 

@@ -8,11 +8,13 @@ const initialPostState = {
     id: null,
     title: null,
     body: null,
+    author: null,
+    category: null,
 
 }
 
 function post (state = initialPostState, action){
-    const { id, title, body, posts, post } = action;   
+    const { id, title, body, posts, post, author, category } = action;   
     switch (action.type) {
         case ADD_ALL_POST:
 

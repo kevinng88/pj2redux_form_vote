@@ -14,13 +14,15 @@ export function addAllPosts ({posts}){
     }
 }
 
-export function addPost ({id, post, title, body}){
+export function addPost ({id, post, title, body, author, category}){
     return {
         type: ADD_POST,
         id,
         post,
         title,
         body,
+        author,
+        category,
         
     }
 }
