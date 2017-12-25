@@ -11,7 +11,7 @@ import sortBy from 'sort-by'
 
 class Post extends Component {
 
-    state = { post: null, comments: null, response: "", addCmtModalOpen: false, editCmtModalOpen: false, currentModel:null }
+    state = { post: null, comments: null, response: "", addCmtModalOpen: false, editCmtModalOpen: false, currentModel: null }
 
     componentDidMount() {
 
@@ -22,7 +22,7 @@ class Post extends Component {
         ////get comment from a post////
         api.getCommentsByPostId(this.props.singlePost).then(
             data => {
-                
+
                 this.setState({ comments: data })
                 this.loadReduxComment()
             })
@@ -37,13 +37,41 @@ class Post extends Component {
                 this.setState({ response: JSON.stringify(data) });
                 //load the new comment in page
                 api.getCommentsByPostId(this.props.singlePost).then(
-                    data => this.setState({ comments: data }))
+                    data => {
+                        this.setState({ comments: data })
+                        //update the redux store
+                        this.addReduxComment()
+                    })
                 //update the comment count of post
                 api.getPostByID(this.props.singlePost).then(
                     data => this.setState({ post: data }))
-                //update the redux store
-                this.addReduxComment()
+                
             })
+    }
+
+    editCmt() {
+        api.updateCommentById(this.state.currentModel.id, this.cmtBodyInputE.value).then(
+            data => {
+                this.setState({ response: JSON.stringify(data) });
+                api.getCommentsByPostId(this.props.singlePost).then(
+                    data => {this.setState({ comments: data })
+                    //update the redux store
+                    this.updateReduxComment()
+                })
+            }
+        )
+    }
+
+    delCmt() {
+         api.deleteCommentById(this.state.currentModel.id).then(
+                data=>{ this.setState({response: JSON.stringify(data)});
+                api.getCommentsByPostId(this.props.singlePost).then(
+                    data => {this.setState({ comments: data })
+                    //update the redux store
+                    this.deleteReduxComment()
+                })
+            }
+        )
     }
 
     changePostData = () => {
@@ -77,29 +105,9 @@ class Post extends Component {
     }
 
     changeCmtData = () => {
-        //////addcmd & getallcmd again (done) /////
-        //   const id = Math.random().toString(36).slice(2)
-        //   api.addComments(id, 'I think this post is good', 'kev', '8xf0y6ziyjabvozdd253nd')
-        //   .then(
-        //     data=>{ this.setState({response: JSON.stringify(data)});
-        //     api.getCommentsByPostId('8xf0y6ziyjabvozdd253nd').then(
-        //       data => this.setState({ comments: data }))}
-        // )
+       
 
-        /////update comment (done)///////
-        // api.updateCommentById('8tu4bsun805n8un48ve89','I should say this comment').then(
-        //       data=>{ this.setState({response: JSON.stringify(data)});
-        //       api.getCommentsByPostId('8xf0y6ziyjabvozdd253nd').then(
-        //          data => this.setState({ comments: data }))}
-        //       )
-
-
-        ////update comment vote (done) ///////
-        // api.commentVoteByID('8tu4bsun805n8un48ve89','upVote').then(
-        //       data=>{ this.setState({response: JSON.stringify(data)});
-        //       api.getCommentsByPostId('8xf0y6ziyjabvozdd253nd').then(
-        //           data => this.setState({ comments: data }))}
-        //       )
+       
 
         ///delete comment (done)//////
         //  api.deleteCommentById('8tu4bsun805n8un48ve89').then(
@@ -124,7 +132,7 @@ class Post extends Component {
     }
 
     loadReduxComment() {
-        this.props._addAllComments({comments : this.state.comments})
+        this.props._addAllComments({ comments: this.state.comments })
     }
 
     addReduxComment() {
@@ -133,11 +141,11 @@ class Post extends Component {
     }
 
     updateReduxComment() {
-        this.props._updateComment({ id: this.state.comments[1].id, body: 'NEW comment is good' })
+        this.props._updateComment({ id: this.state.currentModel.id, body: this.cmtBodyInputE.value })
     }
 
     deleteReduxComment() {
-        this.props._deleteComment({ id: this.state.comments[1].id })
+        this.props._deleteComment({ id: this.state.currentModel.id })
     }
 
     sortCmtbyVote = (way) => {
@@ -154,7 +162,7 @@ class Post extends Component {
     closeAddCmtModal = () => this.setState(() => ({ addCmtModalOpen: false }))
     openEditCmtModal = (cmt) => this.setState(() => ({ editCmtModalOpen: true, currentModel: cmt }))
     closeEditCmtModal = () => this.setState(() => ({ editCmtModalOpen: false }))
-    
+
 
     render() {
         const { post, comments, addCmtModalOpen, editCmtModalOpen, currentModel } = this.state;
@@ -184,11 +192,12 @@ class Post extends Component {
                         <h4>{cmt.author}</h4>
                         <p>{cmt.body}
                             <span>  {cmt.voteScore}</span></p>
-                        <button onClick={()=>{
-                            this.openEditCmtModal(cmt)}}>Edit or Delete</button>
+                        <button onClick={() => {
+                            this.openEditCmtModal(cmt)
+                        }}>Edit or Delete</button>
                     </div>
                 ))}
-                <br/><br/>
+                <br /><br />
                 <button onClick={this.openAddCmtModal}>Add Comment</button>
                 <button onClick={() => (toggle(true))}>back</button>
 
@@ -204,7 +213,7 @@ class Post extends Component {
                     <h2>Add new Comment here </h2>
                     <input type='text' placeholder='body' ref={(input) => this.cmtBodyInput = input} />
                     <input type='text' placeholder='author' ref={(input) => this.cmtAuthorInput = input} />
-                   
+
 
                     <button onClick={() => {
                         this.addCmt()
@@ -221,19 +230,19 @@ class Post extends Component {
                     contentLabel='Comment Modal'
                 >
                     <h2>Edit Comment here </h2>
-                    <input type='text' placeholder='body' value={currentModel && currentModel.body} ref={(input) => this.cmtBodyInput = input} />
-                    <input type='text' placeholder='author' value={currentModel && currentModel.author} ref={(input) => this.cmtAuthorInput = input} />
-                   
+                    <p>Comment by: {currentModel && currentModel.author}</p>
+                    <input type='text' placeholder='body' defaultValue={currentModel && currentModel.body} ref={(input) => this.cmtBodyInputE = input} />
+
 
                     <button onClick={() => {
-                        //this.editCmt()
-                        this.closeAddCmtModal
+                        this.editCmt()
+                        this.closeEditCmtModal
                     }}>edit comment</button>
                     <button onClick={() => {
-                        //this.delCmt()
-                        this.closeAddCmtModal
+                        this.delCmt()
+                        this.closeEditCmtModal
                     }}>delete comment</button>
-                    <button onClick={this.closeAddCmtModal}>cancel</button>
+                    <button onClick={this.closeEditCmtModal}>cancel</button>
                 </Modal>
             </div>
         )

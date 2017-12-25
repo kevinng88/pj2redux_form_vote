@@ -58,15 +58,16 @@ function comment (state = intialCommentState, action) {
         return {
             ...state,
             comments: state.comments.concat(comment),
-            // comment: state.comment.concat(comment),
+            
             
         }
     case UPDATE_COMMENT:
-        const thisCmt = state.comments.filter(c=>c.id === id)[0]
-        thisCmt.body = body
+       
         return {
             ...state,
-            thisCmt
+            comments: state.comments.map(c=>
+                c.id === id? {...c, body : body}: c
+            )
         }
     case DELETE_COMMENT:
         return {
