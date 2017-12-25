@@ -23,6 +23,16 @@ const defaultData = {
     voteScore: -5,
     deleted: false,
     parentDeleted: false
+  },
+  "2au4bsun805n8un48ve89": {
+    id: '2au4bsun805n8un48ve89',
+    parentId: "6ni6ok3ym7mf1p33lnez",
+    timestamp: 1469479767199,
+    body: 'Redux should be use everywhere',
+    author: 'kevkev',
+    voteScore: 1,
+    deleted: false,
+    parentDeleted: false
   }
 }
 

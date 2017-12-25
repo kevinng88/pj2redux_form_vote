@@ -4,13 +4,6 @@ import { combineReducers } from 'redux'
 
 const initialPostState = {
     posts: [],
-    post: {},
-    id: null,
-    title: null,
-    body: null,
-    author: null,
-    category: null,
-
 }
 
 function post (state = initialPostState, action){
@@ -49,10 +42,7 @@ function post (state = initialPostState, action){
 }
 
 const intialCommentState = {
-    comments : [],
-    comment: {},
-    id: null,
-    body:null
+    comments : []
 }
 
 function comment (state = intialCommentState, action) {
@@ -68,6 +58,7 @@ function comment (state = intialCommentState, action) {
         return {
             ...state,
             comments: state.comments.concat(comment),
+            // comment: state.comment.concat(comment),
             
         }
     case UPDATE_COMMENT:

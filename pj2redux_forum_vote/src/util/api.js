@@ -97,7 +97,7 @@ export const getCommentsByPostId = (post_id) => fetch(`${link}/posts/${post_id}/
 
 //API: `POST /comments`
 export const addComments = (id, body, author, post_id) =>
-    fetch(`${link}/posts`, {
+    fetch(`${link}/comments`, {
         headers,
         method: 'POST',
         body: JSON.stringify({
