@@ -104,21 +104,6 @@ class Post extends Component {
         //       })
     }
 
-    changeCmtData = () => {
-       
-
-       
-
-        ///delete comment (done)//////
-        //  api.deleteCommentById('8tu4bsun805n8un48ve89').then(
-        //         data=>{ this.setState({response: JSON.stringify(data)});
-        //         api.getCommentsByPostId('8xf0y6ziyjabvozdd253nd').then(
-        //             data => this.setState({ comments: data }))}
-        //         )
-
-
-    }
-
     addReduxPost() {
         this.props._addPost({ post: this.state.posts[2] })
     }
