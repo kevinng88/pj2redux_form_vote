@@ -11,7 +11,14 @@ import sortBy from 'sort-by'
 
 class Post extends Component {
 
-    state = { post: null, comments: null, response: "", addCmtModalOpen: false, editCmtModalOpen: false, currentModel: null }
+    state = { 
+        post: null, 
+        comments: null, 
+        response: "", 
+        addCmtModalOpen: false, 
+        editPostModalOpen: false, 
+        editCmtModalOpen: false, 
+        currentModel: null }
 
     componentDidMount() {
 
@@ -145,12 +152,14 @@ class Post extends Component {
 
     openAddCmtModal = () => this.setState(() => ({ addCmtModalOpen: true }))
     closeAddCmtModal = () => this.setState(() => ({ addCmtModalOpen: false }))
+    openEditPostModal = () => this.setState(() => ({ editPostModalOpen: true }))
+    closeEditPostModal = () => this.setState(() => ({ editPostModalOpen: false }))
     openEditCmtModal = (cmt) => this.setState(() => ({ editCmtModalOpen: true, currentModel: cmt }))
     closeEditCmtModal = () => this.setState(() => ({ editCmtModalOpen: false }))
 
 
     render() {
-        const { post, comments, addCmtModalOpen, editCmtModalOpen, currentModel } = this.state;
+        const { post, comments, addCmtModalOpen, editPostModalOpen, editCmtModalOpen, currentModel } = this.state;
         const { toggle } = this.props;
 
 
@@ -166,8 +175,11 @@ class Post extends Component {
                     {post && post.body}
                 </p>
                 <p>{post && post.author}
-                    <span>  {post && post.voteScore}</span></p>
+                    <span>vote:  {post && post.voteScore}</span></p>
                 <p>count: {post && post.commentCount}</p>
+                <button onClick={() => {
+                            this.openEditPostModal()
+                        }}>Edit or Delete Post</button>
                 <br /><br /><hr />
                 <button onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote</button>
                 <button onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time</button>
@@ -228,6 +240,29 @@ class Post extends Component {
                         this.closeEditCmtModal
                     }}>delete comment</button>
                     <button onClick={this.closeEditCmtModal}>cancel</button>
+                </Modal>
+                <Modal
+                    //this is the modal of add a edit/delete Post
+                    className='modal'
+                    overlayClassName='overlay'
+                    isOpen={editPostModalOpen}
+                    onRequestClose={this.closeEditPostModal}
+                    contentLabel='Post Modal'
+                >
+                    <h2>Edit Post here </h2>
+                    <p>Post by: {currentModel && currentModel.author}</p>
+                    <input type='text' placeholder='body' defaultValue={currentModel && currentModel.body} ref={(input) => this.cmtBodyInputE = input} />
+
+
+                    <button onClick={() => {
+                        this.editCmt()
+                        this.closeEditCmtModal
+                    }}>edit comment</button>
+                    <button onClick={() => {
+                        this.delCmt()
+                        this.closeEditCmtModal
+                    }}>delete comment</button>
+                    <button onClick={this.closeEditPostModal}>cancel</button>
                 </Modal>
             </div>
         )
