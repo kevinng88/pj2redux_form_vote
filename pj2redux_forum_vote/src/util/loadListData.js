@@ -8,7 +8,7 @@ export function LoadCatagory ({ catagory, onSelect }){
         <div>
             <h1>Select Topics</h1>
             <ul className = 'catalog-list'>
-                {catagory.map(item =>{
+                {catagory && catagory.map(item =>{
                     //why onSelect can't bind to DOM?
                     return (
                     <li onClick={()=>onSelect(item.name)} key={item.name}><h4>{item.name}</h4></li>

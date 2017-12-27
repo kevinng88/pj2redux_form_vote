@@ -288,9 +288,9 @@ switchToMainPage(){
             <input type='text' placeholder='body' ref={(input) => this.postBodyInput = input}/>
             <input type='text' placeholder='author' ref={(input) => this.postAuthorInput = input}/>
             <select name='categoryinput' ref = {(input) => this.postCatSelect = input}>
-              {(categories !== null)?categories.map(cat=>(
+              {(categories && categories.map(cat=>(
                   <option value={cat.name}>{cat.name}</option>
-              )):null}
+              )))}
             </select>
           
             <button onClick={()=>{
