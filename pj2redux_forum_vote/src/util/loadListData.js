@@ -1,4 +1,6 @@
 import React from 'react'
+import FaThumbUp from 'react-icons/lib/fa/thumbs-up'
+import FaThumbDown from 'react-icons/lib/fa/thumbs-down'
 
 export function LoadCatagory ({ catagory, onSelect }){
     //catalog is 'array of object' of all catalog name
@@ -33,8 +35,8 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
                     <li key={item.id}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
                         <span>  {item.voteScore}</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> Like</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> Bad</span>                  
+                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={30}/>></span>
+                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={30}/></span>                  
                     </li>
                     
                 ))}
@@ -55,8 +57,8 @@ export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect })
                     <li key={item.id}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
                         <span>  {item.voteScore}</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> Like</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> Bad</span>                  
+                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}><FaThumbUp size={30} /></span>
+                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}><FaThumbDown size={30}/></span>                  
                     </li>
                     
                 ))}

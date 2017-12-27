@@ -11,11 +11,24 @@ import { LoadCatagory, LoadAllPost, LoadCategoryPost } from '../util/loadListDat
 import Modal from 'react-modal'
 import sortBy from 'sort-by'
 import Post from '../post/post'
+import Loading from 'react-loading'
+import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'
+import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
+import FaClockO from 'react-icons/lib/fa/clock-o'
 
 class App extends Component {
 
-  state = { categories: null, posts: null, comments: null, response: "", addPostModalOpen: false, clickedCat: null, togglePostPage: false, postToOpen: null }
+  state = { 
+    categories: null, 
+    posts: null, 
+    comments: null, 
+    response: "", 
+    addPostModalOpen: false, //for testing. show results from API
+    clickedCat: null, 
+    togglePostPage: false, 
+    postToOpen: null }
 
+  
   componentDidMount() {
     //When program start, we get all the categories and post thu API first.
     //Post data will store in Redux store.
@@ -66,21 +79,6 @@ class App extends Component {
         this.setState({ response: JSON.stringify(data) })
         this.updateAllPost()
       })
-
-  }
-
-
-
-  changeCmtData = () => {
-
-
-
-    ////update comment vote (done) ///////
-    // api.commentVoteByID('8tu4bsun805n8un48ve89','upVote').then(
-    //       data=>{ this.setState({response: JSON.stringify(data)});
-    //       api.getCommentsByPostId('8xf0y6ziyjabvozdd253nd').then(
-    //           data => this.setState({ comments: data }))}
-    //       )
 
   }
 
@@ -151,7 +149,7 @@ class App extends Component {
               <h1 className="App-title">Welcome to React</h1>
             </header>
             <p className="App-intro">
-              To get started {this.state.response}
+              {/* To get started {this.state.response} */}
             </p>
 
             <button onClick={this.openAddPostModal}>show Add post modal</button>
@@ -169,13 +167,14 @@ class App extends Component {
                 onSelect={(selectedCat) => {
                   //load P2 filered post 
                   this.changeClickedCat(selectedCat);
-                }} />): <p>not yet fetch...</p>}
+                }} />): <Loading delay={200} type='spinningBubbles' color='#222' className='loading' />}
             {/* {this.state.posts !== null && (<LoadAllPost post={this.state.posts} onSelect={(selectedPost)=>{this.switchToPostPage(selectedPost)}/>)} */}
 
             {/* button of sort post by votes and time (sort the posts state) */}
-            <button onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote</button>
-            <button onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time</button>
-
+            <p><FaSortAmountDesc size={30}/>
+            <span onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
+            <span onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
+            </p>
             {/*-------------------------------- page 2 functions------------------------- */}
             {/* show filter post by catagories */}
             {/* {this.state.posts !== null && (

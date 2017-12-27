@@ -7,13 +7,18 @@ import {
 import * as api from '../util/api'
 import Modal from 'react-modal'
 import sortBy from 'sort-by'
+import FaThumbUp from 'react-icons/lib/fa/thumbs-up'
+import FaThumbDown from 'react-icons/lib/fa/thumbs-down'
+import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'
+import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
+import FaClockO from 'react-icons/lib/fa/clock-o'
 
 class Post extends Component {
 
     state = { 
         post: null, 
         comments: null, 
-        response: "", 
+        response: "",   //for testing. show results from API
         addCmtModalOpen: false, 
         editPostModalOpen: false, 
         editCmtModalOpen: false, 
@@ -130,6 +135,18 @@ class Post extends Component {
         
     }
 
+    sortCmtbyVote = (way) => {
+        //can either order by vote or by timestamp
+        if (this.state.comments !== null) {
+            let showCmt = this.state.comments
+            way === 'vote' ? showCmt.sort(sortBy('-voteScore')) : null;
+            way === 'time' ? showCmt.sort(sortBy('-timestamp')) : null;
+            this.setState({ comments: showCmt })
+        }
+    }
+
+
+    //redux functions
 
     loadReduxComment() {
         this.props._addAllComments({ comments: this.state.comments })
@@ -148,15 +165,8 @@ class Post extends Component {
         this.props._deleteComment({ id: this.state.currentModel.id })
     }
 
-    sortCmtbyVote = (way) => {
-        //can either order by vote or by timestamp
-        if (this.state.comments !== null) {
-            let showCmt = this.state.comments
-            way === 'vote' ? showCmt.sort(sortBy('-voteScore')) : null;
-            way === 'time' ? showCmt.sort(sortBy('-timestamp')) : null;
-            this.setState({ comments: showCmt })
-        }
-    }
+
+    //switches
 
     openAddCmtModal = () => this.setState(() => ({ addCmtModalOpen: true }))
     closeAddCmtModal = () => this.setState(() => ({ addCmtModalOpen: false }))
@@ -184,24 +194,25 @@ class Post extends Component {
                 </p>
                 <p>{post && post.author}
                     <span> vote:  {post && post.voteScore}</span>
-                    <span onClick={()=>this.changePostVote(post.id, 'upVote')}> Like</span>
-                    <span onClick={()=>this.changePostVote(post.id, 'downVote')}> Bad</span>    
+                    <span onClick={()=>this.changePostVote(post.id, 'upVote')}><FaThumbUp size ={30}/></span>
+                    <span onClick={()=>this.changePostVote(post.id, 'downVote')}><FaThumbDown size ={30}/></span>    
                 </p>
                 <p>count: {post && post.commentCount}</p>
                 <button onClick={() => {
                             this.openEditPostModal()
                         }}>Edit or Delete Post</button>
                 <br /><br /><hr />
-                <button onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote</button>
-                <button onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time</button>
-
+                <p><FaSortAmountDesc size={30}/>
+                <span onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
+                <span onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
+                </p>
                 {comments && comments.map(cmt => (
                     <div>
                         <h4>{cmt.author}</h4>
                         <p>{cmt.body}
                             <span> {cmt.voteScore}</span>
-                            <span onClick={()=>this.changeCmtVote(cmt.id, 'upVote')}> Like</span>
-                            <span onClick={()=>this.changeCmtVote(cmt.id, 'downVote')}> Bad</span>          
+                            <span onClick={()=>this.changeCmtVote(cmt.id, 'upVote')}><FaThumbUp size ={30}/></span>
+                            <span onClick={()=>this.changeCmtVote(cmt.id, 'downVote')}><FaThumbDown size ={30}/></span>          
                         </p>
                         <button onClick={() => {
                             this.openEditCmtModal(cmt)
@@ -211,8 +222,8 @@ class Post extends Component {
                 <br /><br />
                 <button onClick={this.openAddCmtModal}>Add Comment</button>
                 <button onClick={() => (toggle(true))}>back</button>
+                {/* temp:{this.state.response}} */}
 
-                temp:{this.state.response}}
                 <Modal
                     //this is the modal of add a new comment
                     className='modal'
