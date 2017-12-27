@@ -27,6 +27,8 @@ class Post extends Component {
 
     }
 
+    //functions to update/fetch data from api
+
     updateCurrentPost(){
         api.getPostByID(this.props.singlePost).then(
             data => this.setState({ post: data })
@@ -41,6 +43,8 @@ class Post extends Component {
             }
         )
     }
+
+    //functions of comments
 
     addCmt() {
         const id = Math.random().toString(36).slice(2)
@@ -86,6 +90,18 @@ class Post extends Component {
         )
     }
 
+    changeCmtVote(cmtId, selection) {
+        
+        api.commentVoteByID(cmtId, selection).
+            then(data => {
+            this.setState({ response: JSON.stringify(data) })
+            this.updateCmt()
+            })
+        
+    }
+
+    //functions of post
+
     editPost() {
        
         api.updatePostById(this.props.singlePost,this.postTitleInput.value, this.postBodyInput.value).then(
@@ -104,15 +120,14 @@ class Post extends Component {
               })
     }
 
-
-
-    changePostData = () => {
-       
-
-        /////postVote (done)/////
-        //api.postVoteByID('8xf0y6ziyjabvozdd253nd', 'upVote').
-        //then(data => {this.setState({post_data: data})})
-          
+    changePostVote(postId, selection) {
+        
+        api.postVoteByID(postId, selection).
+            then(data => {
+            this.setState({ response: JSON.stringify(data) })
+            this.updateCurrentPost()
+        })
+        
     }
 
 
@@ -168,7 +183,10 @@ class Post extends Component {
                     {post && post.body}
                 </p>
                 <p>{post && post.author}
-                    <span>vote:  {post && post.voteScore}</span></p>
+                    <span> vote:  {post && post.voteScore}</span>
+                    <span onClick={()=>this.changePostVote(post.id, 'upVote')}> Like</span>
+                    <span onClick={()=>this.changePostVote(post.id, 'downVote')}> Bad</span>    
+                </p>
                 <p>count: {post && post.commentCount}</p>
                 <button onClick={() => {
                             this.openEditPostModal()
@@ -181,7 +199,10 @@ class Post extends Component {
                     <div>
                         <h4>{cmt.author}</h4>
                         <p>{cmt.body}
-                            <span>  {cmt.voteScore}</span></p>
+                            <span> {cmt.voteScore}</span>
+                            <span onClick={()=>this.changeCmtVote(cmt.id, 'upVote')}> Like</span>
+                            <span onClick={()=>this.changeCmtVote(cmt.id, 'downVote')}> Bad</span>          
+                        </p>
                         <button onClick={() => {
                             this.openEditCmtModal(cmt)
                         }}>Edit or Delete</button>
