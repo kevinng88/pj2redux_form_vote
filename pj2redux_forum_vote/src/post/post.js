@@ -81,6 +81,35 @@ class Post extends Component {
         )
     }
 
+    editPost() {
+        //not yet implement
+        api.updateCommentById(this.state.currentModel.id, this.cmtBodyInputE.value).then(
+            data => {
+                this.setState({ response: JSON.stringify(data) });
+                api.getCommentsByPostId(this.props.singlePost).then(
+                    data => {this.setState({ comments: data })
+                    //update the redux store
+                    this.updateReduxComment()
+                })
+            }
+        )
+    }
+
+    delPost() {
+        //not yet implement
+        //should delete a post also delete the comments?
+        //should deleted a post turn back to page2?
+         api.deleteCommentById(this.state.currentModel.id).then(
+                data=>{ this.setState({response: JSON.stringify(data)});
+                api.getCommentsByPostId(this.props.singlePost).then(
+                    data => {this.setState({ comments: data })
+                    //update the redux store
+                    this.deleteReduxComment()
+                })
+            }
+        )
+    }
+
     changePostData = () => {
         //////addPost & getallpost again (done) /////
         //   const id = Math.random().toString(36)
@@ -250,18 +279,19 @@ class Post extends Component {
                     contentLabel='Post Modal'
                 >
                     <h2>Edit Post here </h2>
-                    <p>Post by: {currentModel && currentModel.author}</p>
-                    <input type='text' placeholder='body' defaultValue={currentModel && currentModel.body} ref={(input) => this.cmtBodyInputE = input} />
+                    <p>Post by: {post && post.author}</p>
+                    <input type='text' placeholder='body' defaultValue={post && post.title} ref={(input) => this.postTitleInput = input} />
+                    <input type='text' placeholder='body' defaultValue={post && post.body} ref={(input) => this.postBodyInput = input} />
 
 
                     <button onClick={() => {
-                        this.editCmt()
+                        this.editPost()
                         this.closeEditCmtModal
-                    }}>edit comment</button>
+                    }}>edit post</button>
                     <button onClick={() => {
-                        this.delCmt()
+                        this.delPost()
                         this.closeEditCmtModal
-                    }}>delete comment</button>
+                    }}>delete post</button>
                     <button onClick={this.closeEditPostModal}>cancel</button>
                 </Modal>
             </div>
