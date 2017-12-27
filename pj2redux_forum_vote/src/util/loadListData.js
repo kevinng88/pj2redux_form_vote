@@ -28,15 +28,16 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
     //function to load the posts in unorder-list
     return (
         <div>
-            <h1>Current Posts</h1>
+            <h1>Latest Posts</h1>
             <ul className = 'post-list'>
             {post.map(item =>(
                     
                     <li key={item.id}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
-                        <span>  {item.voteScore}</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={30}/>></span>
-                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={30}/></span>                  
+                        <span><b> ({item.category}) </b></span>
+                        <span className='App-votes'>  {item.voteScore}</span>
+                        <span className='App-votes' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
+                        <span className='App-votes' onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={20}/></span>                  
                     </li>
                     
                 ))}

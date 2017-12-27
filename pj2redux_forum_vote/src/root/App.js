@@ -144,16 +144,17 @@ class App extends Component {
         {togglePostPage === true
           ? <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>
           : <div className="App">
-            <header className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="App-title">Welcome to React</h1>
-            </header>
-            <p className="App-intro">
-              {/* To get started {this.state.response} */}
-            </p>
-
-            <button onClick={this.openAddPostModal}>show Add post modal</button>
-
+              <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo" />
+                <h1 className="App-title">Welcome to React</h1>
+                <p className="App-intro">
+                {/* To get started {this.state.response} */}
+                </p>
+              </header>
+              
+              <div className="App-add-post">
+                <button onClick={this.openAddPostModal}>show Add post modal</button>
+              </div>
             {/* have map function   */}
             {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
             
@@ -163,6 +164,7 @@ class App extends Component {
             {/* P1: loading the catagories and all the posts */}
             {categories !== null ? (
               <LoadCatagory
+                className="App-catagory"
                 catagory={categories}
                 onSelect={(selectedCat) => {
                   //load P2 filered post 
@@ -171,22 +173,15 @@ class App extends Component {
             {/* {this.state.posts !== null && (<LoadAllPost post={this.state.posts} onSelect={(selectedPost)=>{this.switchToPostPage(selectedPost)}/>)} */}
 
             {/* button of sort post by votes and time (sort the posts state) */}
-            <p><FaSortAmountDesc size={30}/>
-            <span onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
-            <span onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
-            </p>
-            {/*-------------------------------- page 2 functions------------------------- */}
-            {/* show filter post by catagories */}
-            {/* {this.state.posts !== null && (
-                <LoadAllPost post={posts}
-                  onSelect={(selectedPost)=>{
-                  //load P3
-                  this.switchToPostPage(selectedPost)
-                }}
-                onVoteSelect={(selectedPost, vote)=>{
-                  this.changePostVote(selectedPost, vote)             
-              />)} */}
-            {clickedCat ?
+            <div className="App-sort">
+              <p><FaSortAmountDesc size={30}/>
+                <span onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
+                <span onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
+              </p>
+               {/*-------------------------------- right-side functions------------------------- */}
+               {/* {if category is selected. right side will show category post. Otherwise, it will show all lastest post} */}
+              {clickedCat ?
+              /* show filter post by catagories */
               <LoadCategoryPost
                 selectedCat={clickedCat}
                 post={posts}
@@ -197,8 +192,26 @@ class App extends Component {
                 onVoteSelect={(selectedPost, vote) => {
                   this.changePostVote(selectedPost, vote)
                 }}
-
-              /> : null}
+              /> : 
+              <div>{this.state.posts !== null && (
+                // show all post if categories not clicked. Also the first loading posts
+                <LoadAllPost 
+                  post={posts}
+                  onSelect={(selectedPost)=>{
+                    //load P3
+                    this.switchToPostPage(selectedPost)
+                  }}
+                  onVoteSelect={(selectedPost, vote)=>{
+                    this.changePostVote(selectedPost, vote)   
+                  }}          
+                />)}
+              </div>
+              }
+            </div>
+           
+            
+            
+           
 
             <Modal
               //this is the modal of add a new post

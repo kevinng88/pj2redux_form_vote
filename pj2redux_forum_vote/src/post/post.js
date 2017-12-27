@@ -183,9 +183,14 @@ class Post extends Component {
 
         return (
             <div className="Post">
-                <header className="Post-header">
-                    <h1 className="Post-title">Post Page </h1>
-                </header>
+              <header className="App-header">
+                
+                <h1 className="App-title">Post Page</h1>
+                <p className="App-intro">
+                {/* To get started {this.state.response} */}
+                </p>
+              </header>
+                
                 <h3 className="Post-title">
                     This is Post of: {post && post.title}
                 </h3>
