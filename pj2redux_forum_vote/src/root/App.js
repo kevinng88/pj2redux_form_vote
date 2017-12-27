@@ -186,9 +186,15 @@ switchToPostPage(selectedPost){
 }
 
 switchToMainPage(){
+  //have to call api again for case of post is deleted
   this.setState({
     togglePostPage: false
   })
+  api.getAllPosts().then(
+    data => {
+    this.setState({ posts: data })
+    this.addRedux();
+   })
 }
 
   render() {

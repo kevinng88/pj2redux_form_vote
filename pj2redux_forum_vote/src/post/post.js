@@ -82,44 +82,29 @@ class Post extends Component {
     }
 
     editPost() {
-        //not yet implement
-        api.updateCommentById(this.state.currentModel.id, this.cmtBodyInputE.value).then(
-            data => {
-                this.setState({ response: JSON.stringify(data) });
-                api.getCommentsByPostId(this.props.singlePost).then(
-                    data => {this.setState({ comments: data })
-                    //update the redux store
-                    this.updateReduxComment()
-                })
-            }
-        )
+       
+        api.updatePostById(this.props.singlePost,this.postTitleInput.value, this.postBodyInput.value).then(
+            data=>{ this.setState({response: JSON.stringify(data)});
+                api.getPostByID(this.props.singlePost).then(
+                    data => this.setState({ post: data }))
+            })
     }
 
     delPost() {
         //not yet implement
-        //should delete a post also delete the comments?
-        //should deleted a post turn back to page2?
-         api.deleteCommentById(this.state.currentModel.id).then(
-                data=>{ this.setState({response: JSON.stringify(data)});
-                api.getCommentsByPostId(this.props.singlePost).then(
-                    data => {this.setState({ comments: data })
-                    //update the redux store
-                    this.deleteReduxComment()
-                })
-            }
-        )
+        
+              
+        api.deletePostById(this.props.singlePost).then(
+              data=>{ this.setState({response: JSON.stringify(data)});
+                api.getPostByID(this.props.singlePost).then(
+                    data => this.setState({ post: data }))
+                    //should be to category page as post is deleted
+                    this.props.toggle(true);
+              })
     }
 
     changePostData = () => {
-        //////addPost & getallpost again (done) /////
-        //   const id = Math.random().toString(36)
-        //   api.addPost(id, 'test1','this is body', 'kev', 'react')
-        //   .then(
-        //     data=>{ this.setState({response: data});
-        //     api.getAllPosts().then(
-        //       data => this.setState({ posts: data }))
-        //     }
-        // )
+       
 
         /////postVote (done)/////
         //api.postVoteByID('8xf0y6ziyjabvozdd253nd', 'upVote').
