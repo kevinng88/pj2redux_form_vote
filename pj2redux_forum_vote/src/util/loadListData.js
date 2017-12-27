@@ -21,7 +21,7 @@ export function LoadCatagory ({ catagory, onSelect }){
 }
 
 
-export function LoadAllPost ({ post, onSelect }){
+export function LoadAllPost ({ post, onSelect, onVoteSelect }){
     //post is 'array of object' of all post data
     //function to load the posts in unorder-list
     return (
@@ -29,9 +29,12 @@ export function LoadAllPost ({ post, onSelect }){
             <h1>Current Posts</h1>
             <ul className = 'post-list'>
             {post.map(item =>(
-                    <li onClick={()=>onSelect(item.id)} key={item.id}>
-                    {item.title}
-                    <span>{item.voteScore}</span>
+                    
+                    <li key={item.id}>
+                        <span onClick={()=>onSelect(item.id)}>{item.title}</span>
+                        <span>  {item.voteScore}</span>
+                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> Like</span>
+                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> Bad</span>                  
                     </li>
                     
                 ))}
@@ -40,7 +43,7 @@ export function LoadAllPost ({ post, onSelect }){
     )
 }
 
-export function LoadCategoryPost ({ selectedCat, post, onSelect }){
+export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect }){
     //load filter data after category are clicked
     return (
         <div>
@@ -49,9 +52,11 @@ export function LoadCategoryPost ({ selectedCat, post, onSelect }){
             {post
                 .filter(item =>(item.category === selectedCat))
                 .map(item =>(
-                    <li onClick={()=>onSelect(item.id)} key={item.id}>
-                    {item.title}
-                    <span>{item.voteScore}</span>
+                    <li key={item.id}>
+                        <span onClick={()=>onSelect(item.id)}>{item.title}</span>
+                        <span>  {item.voteScore}</span>
+                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}> Like</span>
+                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}> Bad</span>                  
                     </li>
                     
                 ))}
