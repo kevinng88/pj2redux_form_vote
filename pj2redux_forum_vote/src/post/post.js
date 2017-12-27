@@ -5,7 +5,6 @@ import {
     updateComment, deleteComment
 } from '../action'
 import * as api from '../util/api'
-import { LoadCatagory, LoadAllPost, LoadCategoryPost } from '../util/loadListData'
 import Modal from 'react-modal'
 import sortBy from 'sort-by'
 
@@ -21,19 +20,26 @@ class Post extends Component {
         currentModel: null }
 
     componentDidMount() {
+        //once page load, fetch the current post from API
+        this.updateCurrentPost()
+        //we also fetch the comment of current post
+        this.updateCmt()
 
-        ////// get post by id (done)////
+    }
+
+    updateCurrentPost(){
         api.getPostByID(this.props.singlePost).then(
-            data => this.setState({ post: data }))
+            data => this.setState({ post: data })
+        )
+    }
 
-        ////get comment from a post////
+    updateCmt(){
         api.getCommentsByPostId(this.props.singlePost).then(
             data => {
-
                 this.setState({ comments: data })
                 this.loadReduxComment()
-            })
-
+            }
+        )
     }
 
     addCmt() {
@@ -50,8 +56,7 @@ class Post extends Component {
                         this.addReduxComment()
                     })
                 //update the comment count of post
-                api.getPostByID(this.props.singlePost).then(
-                    data => this.setState({ post: data }))
+                this.updateCurrentPost()
                 
             })
     }
@@ -85,23 +90,21 @@ class Post extends Component {
        
         api.updatePostById(this.props.singlePost,this.postTitleInput.value, this.postBodyInput.value).then(
             data=>{ this.setState({response: JSON.stringify(data)});
-                api.getPostByID(this.props.singlePost).then(
-                    data => this.setState({ post: data }))
+                this.updateCurrentPost()
             })
     }
 
     delPost() {
-        //not yet implement
-        
-              
+          
         api.deletePostById(this.props.singlePost).then(
               data=>{ this.setState({response: JSON.stringify(data)});
-                api.getPostByID(this.props.singlePost).then(
-                    data => this.setState({ post: data }))
-                    //should be to category page as post is deleted
-                    this.props.toggle(true);
+                this.updateCurrentPost()
+                //should be to category page as post is deleted
+                this.props.toggle(true);
               })
     }
+
+
 
     changePostData = () => {
        
@@ -109,33 +112,9 @@ class Post extends Component {
         /////postVote (done)/////
         //api.postVoteByID('8xf0y6ziyjabvozdd253nd', 'upVote').
         //then(data => {this.setState({post_data: data})})
-
-        /////delete post (done)//////
-        // api.deletePostById('zdpmgeh9ysg').then(
-        //       data=>{ this.setState({response: JSON.stringify(data)});
-        //       api.getAllPosts().then(
-        //         data => this.setState({ posts: data }))
-        //       })
-
-        ////update Post ///////
-        // api.updatePostById('6ni6ok3ym7mf1p33lnez','change to this', 'body body body').then(
-        //       data=>{ this.setState({response: JSON.stringify(data)});
-        //       api.getAllPosts().then(
-        //         data => this.setState({ posts: data }))
-        //       })
+          
     }
 
-    addReduxPost() {
-        this.props._addPost({ post: this.state.posts[2] })
-    }
-
-    updateReduxPost() {
-        this.props._updatePost({ id: this.state.posts[3].id, title: 'other title', body: 'body is good' })
-    }
-
-    deleteReduxPost() {
-        this.props._deletePost({ id: this.state.posts[3].id })
-    }
 
     loadReduxComment() {
         this.props._addAllComments({ comments: this.state.comments })
