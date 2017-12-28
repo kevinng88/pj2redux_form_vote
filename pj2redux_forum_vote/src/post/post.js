@@ -190,7 +190,7 @@ class Post extends Component {
                 {/* To get started {this.state.response} */}
                 </p>
               </header>
-                
+              <div className="App-Post">  
                 <h3 className="Post-title">
                     This is Post of: {post && post.title}
                 </h3>
@@ -198,37 +198,41 @@ class Post extends Component {
                     {post && post.body}
                 </p>
                 <p>{post && post.author}
-                    <span> vote:  {post && post.voteScore}</span>
-                    <span onClick={()=>this.changePostVote(post.id, 'upVote')}><FaThumbUp size ={30}/></span>
-                    <span onClick={()=>this.changePostVote(post.id, 'downVote')}><FaThumbDown size ={30}/></span>    
+                    <span className="App-votes"> vote:  {post && post.voteScore}</span>
+                    <span className="App-vote" onClick={()=>this.changePostVote(post.id, 'upVote')}><FaThumbUp size ={20}/></span>
+                    <span className="App-vote" onClick={()=>this.changePostVote(post.id, 'downVote')}><FaThumbDown size ={20}/></span>    
                 </p>
                 <p>count: {post && post.commentCount}</p>
                 <button onClick={() => {
                             this.openEditPostModal()
                         }}>Edit or Delete Post</button>
-                <br /><br /><hr />
-                <p><FaSortAmountDesc size={30}/>
-                <span onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
-                <span onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
+            </div>
+            <div className="App-space"></div>
+            <div className="App-Comment">
+                <p className="App-sort"><FaSortAmountDesc size={30}/>
+                    <span onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
+                    <span onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
                 </p>
                 {comments && comments.map(cmt => (
                     <div>
                         <h4>{cmt.author}</h4>
                         <p>{cmt.body}
-                            <span> {cmt.voteScore}</span>
-                            <span onClick={()=>this.changeCmtVote(cmt.id, 'upVote')}><FaThumbUp size ={30}/></span>
-                            <span onClick={()=>this.changeCmtVote(cmt.id, 'downVote')}><FaThumbDown size ={30}/></span>          
+                            <span className="App-votes"> {cmt.voteScore}</span>
+                            <span className="App-vote" onClick={()=>this.changeCmtVote(cmt.id, 'upVote')}><FaThumbUp size ={20}/></span>
+                            <span className="App-vote" onClick={()=>this.changeCmtVote(cmt.id, 'downVote')}><FaThumbDown size ={20}/></span>          
                         </p>
                         <button onClick={() => {
                             this.openEditCmtModal(cmt)
                         }}>Edit or Delete</button>
                     </div>
                 ))}
-                <br /><br />
+            </div>
+            <div className="App-comment-button">
+                
                 <button onClick={this.openAddCmtModal}>Add Comment</button>
                 <button onClick={() => (toggle(true))}>back</button>
                 {/* temp:{this.state.response}} */}
-
+            </div>
                 <Modal
                     //this is the modal of add a new comment
                     className='modal'

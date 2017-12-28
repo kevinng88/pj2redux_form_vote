@@ -146,7 +146,7 @@ class App extends Component {
           : <div className="App">
               <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                <h1 className="App-title">Welcome to React</h1>
+                <h1 className="App-title">Kev Overflow</h1>
                 <p className="App-intro">
                 {/* To get started {this.state.response} */}
                 </p>
@@ -170,11 +170,10 @@ class App extends Component {
                   //load P2 filered post 
                   this.changeClickedCat(selectedCat);
                 }} />): <Loading delay={200} type='spinningBubbles' color='#222' className='loading' />}
-            {/* {this.state.posts !== null && (<LoadAllPost post={this.state.posts} onSelect={(selectedPost)=>{this.switchToPostPage(selectedPost)}/>)} */}
-
+            
             {/* button of sort post by votes and time (sort the posts state) */}
-            <div className="App-sort">
-              <p><FaSortAmountDesc size={30}/>
+            <div>
+              <p className="App-sort"><FaSortAmountDesc size={30}/>
                 <span onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
                 <span onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
               </p>
@@ -208,11 +207,6 @@ class App extends Component {
               </div>
               }
             </div>
-           
-            
-            
-           
-
             <Modal
               //this is the modal of add a new post
               className='modal'

@@ -36,8 +36,8 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
                         <span><b> ({item.category}) </b></span>
                         <span className='App-votes'>  {item.voteScore}</span>
-                        <span className='App-votes' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
-                        <span className='App-votes' onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={20}/></span>                  
+                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
+                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={20}/></span>                  
                     </li>
                     
                 ))}
@@ -57,9 +57,9 @@ export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect })
                 .map(item =>(
                     <li key={item.id}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
-                        <span>  {item.voteScore}</span>
-                        <span onClick={()=>onVoteSelect(item.id, 'upVote')}><FaThumbUp size={30} /></span>
-                        <span onClick={()=>onVoteSelect(item.id, 'downVote')}><FaThumbDown size={30}/></span>                  
+                        <span className='App-votes'>{item.voteScore}</span>
+                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}><FaThumbUp size={20} /></span>
+                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}><FaThumbDown size={20}/></span>                  
                     </li>
                     
                 ))}
