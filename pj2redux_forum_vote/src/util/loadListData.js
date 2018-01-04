@@ -30,7 +30,7 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
         <div>
             <h1>Latest Posts</h1>
             <ul className = 'post-list'>
-            {post.map(item =>(
+            {post && post.map(item =>(
                     
                     <li key={item.id}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>

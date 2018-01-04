@@ -9,7 +9,7 @@ import {
 import * as api from '../util/api'
 import { LoadCatagory, LoadAllPost, LoadCategoryPost } from '../util/loadListData'
 import Modal from 'react-modal'
-import sortBy from 'sort-by'
+import sortBy from '../util/sort-by'
 import Post from '../post/post'
 import Loading from 'react-loading'
 import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'

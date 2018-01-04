@@ -6,7 +6,7 @@ import {
 } from '../action'
 import * as api from '../util/api'
 import Modal from 'react-modal'
-import sortBy from 'sort-by'
+import sortBy from '../util/sort-by'
 import FaThumbUp from 'react-icons/lib/fa/thumbs-up'
 import FaThumbDown from 'react-icons/lib/fa/thumbs-down'
 import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'
