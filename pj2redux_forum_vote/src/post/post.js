@@ -12,6 +12,7 @@ import FaThumbDown from 'react-icons/lib/fa/thumbs-down'
 import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'
 import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
 import FaClockO from 'react-icons/lib/fa/clock-o'
+import { Link } from 'react-router-dom'
 
 class Post extends Component {
 
@@ -230,8 +231,11 @@ class Post extends Component {
             <div className="App-comment-button">
                 
                 <button onClick={this.openAddCmtModal}>Add Comment</button>
+            {post &&
+            <Link to={`/${post.category}`}>
                 <button onClick={() => (toggle(true))}>back</button>
                 {/* temp:{this.state.response}} */}
+            </Link>}
             </div>
                 <Modal
                     //this is the modal of add a new comment

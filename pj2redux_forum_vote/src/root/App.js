@@ -15,20 +15,77 @@ import Loading from 'react-loading'
 import FaSortAmountDesc from 'react-icons/lib/fa/sort-amount-desc'
 import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
 import FaClockO from 'react-icons/lib/fa/clock-o'
+//review: 1 added for react-router-redux
+import { push } from 'react-router-redux'
+import { Route, Link } from 'react-router-dom'
+
+
+//review: 1 take out from App and create functional component for reuse
+const Header = () => (
+  <header>
+    <img src={logo} className="App-logo" alt="logo" />
+    <h1 className="App-title">Kev Overflow</h1>
+    <p className="App-intro">
+      {/* To get started {this.state.response} */}
+    </p>
+  </header>
+)
+
+//review: 1 take out from App and create functional component for reuse
+const Container = (data) => {
+  const { categories, changeClickedCat } = data
+
+  return (
+    <div>
+      <div className="App-add-post">
+        <button onClick={this.openAddPostModal}>show Add post modal</button>
+      </div>
+
+      {categories !== null ? (
+        <LoadCatagory
+          className="App-catagory"
+          catagory={categories}
+          onSelect={(selectedCat) => {
+            //load P2 filered post 
+            changeClickedCat(selectedCat);
+          }} />) : <Loading delay={200} type='spinningBubbles' color='#222' className='loading' />}
+
+
+    </div>
+  )
+}
+
+//review: 1 take out from App and create functional component for reuse
+const SortPost = (data) => {
+  const { sortPostbyVote } = data
+
+  return (
+    <div>
+      {/* button of sort post by votes and time (sort the posts state) */}
+      <p className="App-sort"><FaSortAmountDesc size={30} />
+        <span onClick={sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25} /></span>
+        <span onClick={sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25} /></span>
+      </p>
+    </div>
+  )
+}
+
+
 
 class App extends Component {
 
-  state = { 
-    categories: null, 
-    posts: null, 
-    comments: null, 
-    response: "", 
+  state = {
+    categories: null,
+    posts: null,
+    comments: null,
+    response: "",
     addPostModalOpen: false, //for testing. show results from API
-    clickedCat: null, 
-    togglePostPage: false, 
-    postToOpen: null }
+    clickedCat: null,
+    togglePostPage: false,
+    postToOpen: null
+  }
 
-  
+
   componentDidMount() {
     //When program start, we get all the categories and post thu API first.
     //Post data will store in Redux store.
@@ -114,7 +171,7 @@ class App extends Component {
   closeAddPostModal = () => this.setState(() => ({ addPostModalOpen: false }))
 
   changeClickedCat(category) {
-    this.setState({ clickedCat: category })
+    //this.setState({ clickedCat: category })
   }
 
   switchToPostPage(selectedPost) {
@@ -141,99 +198,97 @@ class App extends Component {
     return (
 
       <div>
-        {togglePostPage === true
-          ? <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>
-          : <div className="App">
-              <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <h1 className="App-title">Kev Overflow</h1>
-                <p className="App-intro">
-                {/* To get started {this.state.response} */}
-                </p>
-              </header>
-              
-              <div className="App-add-post">
-                <button onClick={this.openAddPostModal}>show Add post modal</button>
-              </div>
-            {/* have map function   */}
-            {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
-            
 
-            {/*-------------------------------- page 1 functions------------------------- */}
+        {/* have map function   */}
+        {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
 
-            {/* P1: loading the catagories and all the posts */}
-            {categories !== null ? (
-              <LoadCatagory
-                className="App-catagory"
-                catagory={categories}
-                onSelect={(selectedCat) => {
-                  //load P2 filered post 
-                  this.changeClickedCat(selectedCat);
-                }} />): <Loading delay={200} type='spinningBubbles' color='#222' className='loading' />}
-            
-            {/* button of sort post by votes and time (sort the posts state) */}
-            <div>
-              <p className="App-sort"><FaSortAmountDesc size={30}/>
-                <span onClick={this.sortPostbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
-                <span onClick={this.sortPostbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
-              </p>
-               {/*-------------------------------- right-side functions------------------------- */}
-               {/* {if category is selected. right side will show category post. Otherwise, it will show all lastest post} */}
-              {clickedCat ?
-              /* show filter post by catagories */
+
+        <Route exact path='/comment/:id' render={() => (
+          <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>)} />
+
+
+        <Route exact path='/:routeCat' render={({ match }) => (
+          <div className="App">
+            <div className="App-header">
+              <Header />
+            </div>
+            <div className="App-left">
+              <Container categories={categories} changeClickedCat={this.changeClickedCat} />
+            </div>
+            <div className="App-right">
+              <SortPost sortPostbyVote={this.sortPostbyVote} />
+              {/* {console.log(`route: ${match.params.routeCat}`)} */}
+
               <LoadCategoryPost
-                selectedCat={clickedCat}
+                // use path as optional route
+                selectedCat={match.params.routeCat}
                 post={posts}
                 onSelect={(selectedPost) => {
-                  //load P3
+
                   this.switchToPostPage(selectedPost)
                 }}
                 onVoteSelect={(selectedPost, vote) => {
                   this.changePostVote(selectedPost, vote)
                 }}
-              /> : 
-              <div>{this.state.posts !== null && (
+              />
+            </div>
+          </div>)} />
+        <Route exact path='/' render={() => (
+          <div className="App">
+            <div className="App-header">
+              <Header />
+            </div>
+            <div className="App-left">
+              <Container categories={categories} changeClickedCat={this.changeClickedCat} />
+            </div>
+            <div className="App-right">
+              <SortPost sortPostbyVote={this.sortPostbyVote} />
+              {this.state.posts !== null && (
                 // show all post if categories not clicked. Also the first loading posts
-                <LoadAllPost 
+                <LoadAllPost
                   post={posts}
-                  onSelect={(selectedPost)=>{
+                  onSelect={(selectedPost) => {
                     //load P3
                     this.switchToPostPage(selectedPost)
                   }}
-                  onVoteSelect={(selectedPost, vote)=>{
-                    this.changePostVote(selectedPost, vote)   
-                  }}          
+                  onVoteSelect={(selectedPost, vote) => {
+                    this.changePostVote(selectedPost, vote)
+                  }}
                 />)}
-              </div>
-              }
             </div>
-            <Modal
-              //this is the modal of add a new post
-              className='modal'
-              overlayClassName='overlay'
-              isOpen={addPostModalOpen}
-              onRequestClose={this.closeAddPostModal}
-              contentLabel='Post Modal'
-            >
-              <h2>Add new Post here </h2>
-              <input type='text' placeholder='title' ref={(input) => this.postTitleInput = input} />
-              {/* <input type='text' placeholder='title' value ={this.props.postTitle}/> */}
-              <input type='text' placeholder='body' ref={(input) => this.postBodyInput = input} />
-              <input type='text' placeholder='author' ref={(input) => this.postAuthorInput = input} />
-              <select name='categoryinput' ref={(input) => this.postCatSelect = input}>
-                {(categories && categories.map(cat => (
-                  <option value={cat.name}>{cat.name}</option>
-                )))}
-              </select>
+          </div>)}
+        />
 
-              <button onClick={() => {
-                this.addAPost()
-                this.closeAddPostModal
-              }}>add Post</button>
-              <button onClick={this.closeAddPostModal}>cancel</button>
-            </Modal>
-          </div>}
+        {/* </div> */}
+        <Modal
+          //this is the modal of add a new post
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={addPostModalOpen}
+          onRequestClose={this.closeAddPostModal}
+          contentLabel='Post Modal'
+        >
+          <h2>Add new Post here </h2>
+          <input type='text' placeholder='title' ref={(input) => this.postTitleInput = input} />
+          {/* <input type='text' placeholder='title' value ={this.props.postTitle}/> */}
+          <input type='text' placeholder='body' ref={(input) => this.postBodyInput = input} />
+          <input type='text' placeholder='author' ref={(input) => this.postAuthorInput = input} />
+          <select name='categoryinput' ref={(input) => this.postCatSelect = input}>
+            {(categories && categories.map(cat => (
+              <option value={cat.name}>{cat.name}</option>
+            )))}
+          </select>
+
+          <button onClick={() => {
+            this.addAPost()
+            this.closeAddPostModal
+          }}>add Post</button>
+          <button onClick={this.closeAddPostModal}>cancel</button>
+        </Modal>
       </div>
+
+
+      // </div>
     );
   }
 
@@ -256,6 +311,7 @@ function mapDispatchToProps(dispatch) {
     _addComment: (data) => dispatch(addComment(data)),
     _updateComment: (data) => dispatch(updateComment(data)),
     _deleteComment: (data) => dispatch(deleteComment(data)),
+
 
   }
 }

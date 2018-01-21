@@ -1,6 +1,7 @@
 import React from 'react'
 import FaThumbUp from 'react-icons/lib/fa/thumbs-up'
 import FaThumbDown from 'react-icons/lib/fa/thumbs-down'
+import { Link } from 'react-router-dom'
 
 export function LoadCatagory ({ catagory, onSelect }){
     //catalog is 'array of object' of all catalog name
@@ -13,8 +14,9 @@ export function LoadCatagory ({ catagory, onSelect }){
                 {catagory && catagory.map(item =>{
                     //why onSelect can't bind to DOM?
                     return (
-                    <li onClick={()=>onSelect(item.name)} key={item.name}><h4>{item.name}</h4></li>
-                    
+                    <Link to={item.name}>
+                        <li onClick={()=>onSelect(item.name)} key={item.name}><h4>{item.name}</h4></li>
+                    </Link>
                 )})}
             </ul>
             
@@ -33,7 +35,9 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
             {post && post.map(item =>(
                     
                     <li key={item.id}>
+                    <Link to={`/comment/${item.id}`}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
+                    </Link>
                         <span><b> ({item.category}) </b></span>
                         <span className='App-votes'>  {item.voteScore}</span>
                         <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
@@ -52,11 +56,13 @@ export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect })
         <div>
             <h1>Posts of {selectedCat}</h1>
             <ul className = 'post-list'>
-            {post
+            {post && post
                 .filter(item =>(item.category === selectedCat))
                 .map(item =>(
                     <li key={item.id}>
+                    <Link to={`/comment/${item.id}`}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
+                    </Link>
                         <span className='App-votes'>{item.voteScore}</span>
                         <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}><FaThumbUp size={20} /></span>
                         <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}><FaThumbDown size={20}/></span>                  

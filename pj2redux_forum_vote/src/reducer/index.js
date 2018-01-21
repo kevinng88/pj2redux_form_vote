@@ -1,6 +1,8 @@
 import {ADD_ALL_POST, ADD_POST, UPDATE_POST, DELETE_POST,
     ADD_ALL_COMMENT,ADD_COMMENT,UPDATE_COMMENT,DELETE_COMMENT } from '../action'
 import { combineReducers } from 'redux'
+//review: 1 added for react-router-redux
+import { routerReducer } from 'react-router-redux'
 
 const initialPostState = {
     posts: [],
@@ -79,4 +81,5 @@ function comment (state = intialCommentState, action) {
     }
 }
 
-export default combineReducers({post, comment});
+//review: 1 added for react-router-redux
+export default combineReducers({post, comment, routing: routerReducer});

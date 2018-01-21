@@ -47,6 +47,14 @@ li,
   font-size: large;
 }
 
+.App-left{
+  grid-column:  1/1;
+}
+
+.App-right{
+  grid-column:  2/3;
+}
+
 .App-add-post{
   grid-column : 1/3;
 }
