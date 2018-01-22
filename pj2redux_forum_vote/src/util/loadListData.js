@@ -35,7 +35,8 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
             {post && post.map(item =>(
                     
                     <li key={item.id}>
-                    <Link to={`/comment/${item.id}`}>
+                    {/* review 2b: changed link of comments */}
+                    <Link to={`/${item.category}/${item.id}`}>  
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
                     </Link>
                         <span><b> ({item.category}) </b></span>
@@ -60,7 +61,8 @@ export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect })
                 .filter(item =>(item.category === selectedCat))
                 .map(item =>(
                     <li key={item.id}>
-                    <Link to={`/comment/${item.id}`}>
+                    {/* review 2b: changed link of comments */}
+                    <Link to={`/${item.category}/${item.id}`}>
                         <span onClick={()=>onSelect(item.id)}>{item.title}</span>
                     </Link>
                         <span className='App-votes'>{item.voteScore}</span>

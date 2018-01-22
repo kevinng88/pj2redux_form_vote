@@ -23,9 +23,14 @@ import { Route, Link } from 'react-router-dom'
 //review: 1 take out from App and create functional component for reuse
 const Header = () => (
   <header>
+    <Link to="/">
+          <button>home</button>               
+    </Link>
     <img src={logo} className="App-logo" alt="logo" />
     <h1 className="App-title">Kev Overflow</h1>
+    
     <p className="App-intro">
+      
       {/* To get started {this.state.response} */}
     </p>
   </header>
@@ -33,12 +38,12 @@ const Header = () => (
 
 //review: 1 take out from App and create functional component for reuse
 const Container = (data) => {
-  const { categories, changeClickedCat } = data
+  const { categories, changeClickedCat, openAddPostModal } = data
 
   return (
     <div>
       <div className="App-add-post">
-        <button onClick={this.openAddPostModal}>show Add post modal</button>
+        <button onClick={openAddPostModal}>show Add post modal</button>
       </div>
 
       {categories !== null ? (
@@ -203,7 +208,7 @@ class App extends Component {
         {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
 
 
-        <Route exact path='/comment/:id' render={() => (
+        <Route exact path='/:comment/:id' render={() => (
           <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>)} />
 
 
@@ -213,7 +218,7 @@ class App extends Component {
               <Header />
             </div>
             <div className="App-left">
-              <Container categories={categories} changeClickedCat={this.changeClickedCat} />
+              <Container categories={categories} changeClickedCat={this.changeClickedCat} openAddPostModal={this.openAddPostModal} />
             </div>
             <div className="App-right">
               <SortPost sortPostbyVote={this.sortPostbyVote} />
@@ -239,7 +244,7 @@ class App extends Component {
               <Header />
             </div>
             <div className="App-left">
-              <Container categories={categories} changeClickedCat={this.changeClickedCat} />
+              <Container categories={categories} changeClickedCat={this.changeClickedCat} openAddPostModal={this.openAddPostModal} />
             </div>
             <div className="App-right">
               <SortPost sortPostbyVote={this.sortPostbyVote} />

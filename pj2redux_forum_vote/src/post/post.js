@@ -18,7 +18,6 @@ class Post extends Component {
 
     state = { 
         post: null, 
-        comments: null, 
         response: "",   //for testing. show results from API
         addCmtModalOpen: false, 
         editPostModalOpen: false, 
@@ -44,8 +43,7 @@ class Post extends Component {
     updateCmt(){
         api.getCommentsByPostId(this.props.singlePost).then(
             data => {
-                this.setState({ comments: data })
-                this.loadReduxComment()
+              this.props._addAllComments({ comments: data })
             }
         )
     }
@@ -61,12 +59,11 @@ class Post extends Component {
                 //load the new comment in page
                 api.getCommentsByPostId(this.props.singlePost).then(
                     data => {
-                        this.setState({ comments: data })
-                        //update the redux store
-                        this.addReduxComment()
+                        this.props._addComment({ comment: data[data.length-1] })
                     })
                 //update the comment count of post
                 this.updateCurrentPost()
+                this.closeAddCmtModal
                 
             })
     }
@@ -76,9 +73,9 @@ class Post extends Component {
             data => {
                 this.setState({ response: JSON.stringify(data) });
                 api.getCommentsByPostId(this.props.singlePost).then(
-                    data => {this.setState({ comments: data })
-                    //update the redux store
-                    this.updateReduxComment()
+                    data => {
+                        this.props._updateComment({ id: this.state.currentModel.id, body: this.cmtBodyInputE.value })
+                        this.closeEditCmtModal
                 })
             }
         )
@@ -88,9 +85,9 @@ class Post extends Component {
          api.deleteCommentById(this.state.currentModel.id).then(
                 data=>{ this.setState({response: JSON.stringify(data)});
                 api.getCommentsByPostId(this.props.singlePost).then(
-                    data => {this.setState({ comments: data })
-                    //update the redux store
-                    this.deleteReduxComment()
+                    data => {this.setState({ comments: data })                    
+                        this.props._deleteComment({ id: this.state.currentModel.id })
+                        this.closeEditCmtModal
                 })
             }
         )
@@ -100,8 +97,8 @@ class Post extends Component {
         
         api.commentVoteByID(cmtId, selection).
             then(data => {
-            this.setState({ response: JSON.stringify(data) })
-            this.updateCmt()
+                this.setState({ response: JSON.stringify(data) })
+                this.updateCmt()
             })
         
     }
@@ -113,6 +110,7 @@ class Post extends Component {
         api.updatePostById(this.props.singlePost,this.postTitleInput.value, this.postBodyInput.value).then(
             data=>{ this.setState({response: JSON.stringify(data)});
                 this.updateCurrentPost()
+                this.closeEditPostModal
             })
     }
 
@@ -121,8 +119,11 @@ class Post extends Component {
         api.deletePostById(this.props.singlePost).then(
               data=>{ this.setState({response: JSON.stringify(data)});
                 this.updateCurrentPost()
+                this.props.toggle(true)
+                this.closeEditPostModal
                 //should be to category page as post is deleted
-                this.props.toggle(true);
+                console.log('should back')
+
               })
     }
 
@@ -138,38 +139,13 @@ class Post extends Component {
 
     sortCmtbyVote = (way) => {
         //can either order by vote or by timestamp
-        if (this.state.comments !== null) {
-            let showCmt = this.state.comments
+        if (this.props.comment !== null) {
+            let showCmt = this.props.comment.comments
             way === 'vote' ? showCmt.sort(sortBy('-voteScore')) : null;
             way === 'time' ? showCmt.sort(sortBy('-timestamp')) : null;
             this.setState({ comments: showCmt })
         }
     }
-
-
-    //redux functions
-
-    loadReduxComment() {
-        this.props._addAllComments({ comments: this.state.comments })
-    }
-
-    addReduxComment() {
-
-        this.props._addComment({ comment: this.state.comments[this.state.comments.length-1] })
-    }
-
-    updateReduxComment() {
-        this.props._updateComment({ id: this.state.currentModel.id, body: this.cmtBodyInputE.value })
-    }
-
-    deleteReduxComment() {
-        this.props._deleteComment({ id: this.state.currentModel.id })
-    }
-
-    getAllReduxComment = () => {
-        return this.props._getAllComment()
-    }
-
 
     //switches
 
@@ -182,15 +158,19 @@ class Post extends Component {
 
 
     render() {
-        const { post, comments, addCmtModalOpen, editPostModalOpen, editCmtModalOpen, currentModel } = this.state;
+        const { post, addCmtModalOpen, editPostModalOpen, editCmtModalOpen, currentModel } = this.state;
         const { toggle, comment } = this.props;
 
 
         return (
             <div className="Post">
               <header className="App-header">
-                {comment && console.log(comment)}
+                {/* {comment && console.log(comment.comments)} */}
+                
                 <h1 className="App-title">Post Page</h1>
+                <Link to="/">
+                    <button>home</button>               
+                </Link>
                 <p className="App-intro">
                 {/* To get started {this.state.response} */}
                 </p>
@@ -220,7 +200,7 @@ class Post extends Component {
                     <span onClick={this.sortCmtbyVote.bind(this, 'vote')}>Sort by vote<FaCheckSquareO size={25}/></span>
                     <span onClick={this.sortCmtbyVote.bind(this, 'time')}>Sort by time<FaClockO size={25}/></span>
                 </p>
-                {comments && comments.map(cmt => (
+                {comment.comments && comment.comments.map(cmt => (
                     <div>
                         <h4>{cmt.author}</h4>
                         <p>{cmt.body}
@@ -258,7 +238,7 @@ class Post extends Component {
 
                     <button onClick={() => {
                         this.addCmt()
-                        this.closeAddCmtModal
+                        
                     }}>add comment</button>
                     <button onClick={this.closeAddCmtModal}>cancel</button>
                 </Modal>
@@ -277,7 +257,7 @@ class Post extends Component {
 
                     <button onClick={() => {
                         this.editCmt()
-                        this.closeEditCmtModal
+                        
                     }}>edit comment</button>
                     <button onClick={() => {
                         this.delCmt()
@@ -301,12 +281,16 @@ class Post extends Component {
 
                     <button onClick={() => {
                         this.editPost()
-                        this.closeEditCmtModal
+                        
                     }}>edit post</button>
-                    <button onClick={() => {
-                        this.delPost()
-                        this.closeEditCmtModal
-                    }}>delete post</button>
+                    {post && <Link 
+                        to={`/${post.category}`}
+                        >
+                        <button onClick={() => {
+                            this.delPost()
+                            
+                        }}>delete post</button>
+                    </Link>}
                     <button onClick={this.closeEditPostModal}>cancel</button>
                 </Modal>
             </div>
