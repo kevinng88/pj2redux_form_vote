@@ -166,10 +166,6 @@ class Post extends Component {
         this.props._deleteComment({ id: this.state.currentModel.id })
     }
 
-    getAllReduxComment = () => {
-        return this.props._getAllComment()
-    }
-
 
     //switches
 
@@ -183,13 +179,13 @@ class Post extends Component {
 
     render() {
         const { post, comments, addCmtModalOpen, editPostModalOpen, editCmtModalOpen, currentModel } = this.state;
-        const { toggle, comment } = this.props;
+        const { toggle } = this.props;
 
 
         return (
             <div className="Post">
               <header className="App-header">
-                {comment && console.log(comment)}
+                
                 <h1 className="App-title">Post Page</h1>
                 <p className="App-intro">
                 {/* To get started {this.state.response} */}
@@ -209,9 +205,7 @@ class Post extends Component {
                 </p>
                 <p>count: {post && post.commentCount}</p>
                 <button onClick={() => {
-                            
                             this.openEditPostModal()
-                            
                         }}>Edit or Delete Post</button>
             </div>
             <div className="App-space"></div>
@@ -319,7 +313,7 @@ class Post extends Component {
 
 
 function mapStateToProps(state) {
-    return {comment: state.comment};
+    return state;
 }
 
 
@@ -333,7 +327,6 @@ function mapDispatchToProps(dispatch) {
         _addComment: (data) => dispatch(addComment(data)),
         _updateComment: (data) => dispatch(updateComment(data)),
         _deleteComment: (data) => dispatch(deleteComment(data)),
-        
 
     }
 }

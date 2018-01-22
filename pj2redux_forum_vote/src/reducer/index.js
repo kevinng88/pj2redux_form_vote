@@ -44,7 +44,7 @@ function post (state = initialPostState, action){
 }
 
 const intialCommentState = {
-    comments : []
+    comments : null
 }
 
 function comment (state = intialCommentState, action) {
@@ -74,11 +74,12 @@ function comment (state = intialCommentState, action) {
     case DELETE_COMMENT:
         return {
             
-            comments: state.comments.filter(c=>c.id != id)
+            comments: state.comments.filter(c=>c.id !== id)
         }
     default :
         return state
     }
+    
 }
 
 //review: 1 added for react-router-redux
