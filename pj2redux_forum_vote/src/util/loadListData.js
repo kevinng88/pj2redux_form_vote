@@ -25,7 +25,7 @@ export function LoadCatagory ({ catagory, onSelect }){
 }
 
 
-export function LoadAllPost ({ post, onSelect, onVoteSelect }){
+export function LoadAllPost ({ post, onSelect, onVoteSelect, onEditSelect }){
     //post is 'array of object' of all post data
     //function to load the posts in unorder-list
     return (
@@ -36,14 +36,24 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
                     
                     <li key={item.id}>
                     {/* review 2b: changed link of comments */}
-                    <Link to={`/${item.category}/${item.id}`}>  
-                        <span onClick={()=>onSelect(item.id)}>{item.title}</span>
-                    </Link>
-                        <span><b> ({item.category}) </b></span>
-                        <span className='App-votes'>  {item.voteScore}</span>
-                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
-                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={20}/></span>                  
+                    <div>
+                        <Link to={`/${item.category}/${item.id}`}>  
+                            <span onClick={()=>onSelect(item.id)}>{item.title}</span>
+                        </Link>
+                            <span><b> ({item.category}) </b></span>
+                            <span className='App-votes'>  {item.voteScore}</span>
+                            <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}> <FaThumbUp size={20}/></span>
+                            <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}> <FaThumbDown size={20}/></span>                  
+                    </div>
+                    {/* review 3b: add posts details */}
+                    <div>
+                        <span className="App-post-detail">author: {item.author}</span>
+                        <span className="App-post-detail">number of comments: {item.commentCount}</span>
+                        <button onClick={()=>onEditSelect(item)}>Edit/Delete Post</button>
+                        
+                    </div>
                     </li>
+                    
                     
                 ))}
             </ul>
@@ -51,25 +61,35 @@ export function LoadAllPost ({ post, onSelect, onVoteSelect }){
     )
 }
 
-export function LoadCategoryPost ({ selectedCat, post, onSelect, onVoteSelect }){
+export function LoadCategoryPost({ selectedCat, post, onSelect, onVoteSelect, onEditSelect }) {
     //load filter data after category are clicked
     return (
         <div>
             <h1>Posts of {selectedCat}</h1>
-            <ul className = 'post-list'>
-            {post && post
-                .filter(item =>(item.category === selectedCat))
-                .map(item =>(
-                    <li key={item.id}>
-                    {/* review 2b: changed link of comments */}
-                    <Link to={`/${item.category}/${item.id}`}>
-                        <span onClick={()=>onSelect(item.id)}>{item.title}</span>
-                    </Link>
-                        <span className='App-votes'>{item.voteScore}</span>
-                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'upVote')}><FaThumbUp size={20} /></span>
-                        <span className='App-vote' onClick={()=>onVoteSelect(item.id, 'downVote')}><FaThumbDown size={20}/></span>                  
-                    </li>
+            <ul className='post-list'>
+                {post && post
+                    .filter(item => (item.category === selectedCat))
+                    .map(item => (
+                        <li key={item.id}>
+                            {/* review 2b: changed link of comments */}
+                            <div>
+                                <Link to={`/${item.category}/${item.id}`}>
+                                    <span onClick={() => onSelect(item.id)}>{item.title}</span>
+                                </Link>
+                                <span className='App-votes'>{item.voteScore}</span>
+                                <span className='App-vote' onClick={() => onVoteSelect(item.id, 'upVote')}><FaThumbUp size={20} /></span>
+                                <span className='App-vote' onClick={() => onVoteSelect(item.id, 'downVote')}><FaThumbDown size={20} /></span>                  
+                            </div>
+                            {/* review 3b: add posts details */}
+                            <div>
+                                <span className="App-post-detail">author: {item.author}</span>
+                                <span className="App-post-detail">number of comments: {item.commentCount}</span>
+                                <button onClick={()=>onEditSelect(item)}>Edit/Delete Post</button>
+                            </div>
                     
+                        </li>
+                    
+                        
                 ))}
             </ul>
         </div>

@@ -17,7 +17,7 @@ import FaCheckSquareO from 'react-icons/lib/fa/check-square-o'
 import FaClockO from 'react-icons/lib/fa/clock-o'
 //review: 1 added for react-router-redux
 import { push } from 'react-router-redux'
-import { Route, Link } from 'react-router-dom'
+import { Route, Link, Redirect } from 'react-router-dom'
 
 
 //review: 1 take out from App and create functional component for reuse
@@ -84,7 +84,8 @@ class App extends Component {
     posts: null,
     comments: null,
     response: "",
-    addPostModalOpen: false, //for testing. show results from API
+    addPostModalOpen: false, 
+    editPostModalOpen: false,
     clickedCat: null,
     togglePostPage: false,
     postToOpen: null
@@ -169,11 +170,35 @@ class App extends Component {
     }
   }
 
+  //edit/delete post method
+  //functions of post
+
+  editPost() {
+    
+     api.updatePostById(this.state.postToOpen.id,this.postTitleInput.value, this.postBodyInput.value).then(
+         data=>{ this.setState({response: JSON.stringify(data)});
+             this.updateAllPost()
+             this.closeEditPostModal
+         })
+ }
+
+ delPost() {
+       
+     api.deletePostById(this.state.postToOpen.id).then(
+           data=>{ this.setState({response: JSON.stringify(data)});            
+             this.updateAllPost()
+             this.closeEditPostModal
+
+           })
+ }
+
 
   //switches
 
   openAddPostModal = () => this.setState(() => ({ addPostModalOpen: true }))
   closeAddPostModal = () => this.setState(() => ({ addPostModalOpen: false }))
+  openEditPostModal = (selectedPost) => this.setState(() => ({ editPostModalOpen: true, postToOpen: selectedPost }))
+  closeEditPostModal = () => this.setState(() => ({ editPostModalOpen: false }))
 
   changeClickedCat(category) {
     //this.setState({ clickedCat: category })
@@ -198,7 +223,7 @@ class App extends Component {
 
 
     const { _addPost, _updatePost } = this.props;
-    const { categories, addPostModalOpen, posts, comments, clickedCat, togglePostPage, postToOpen } = this.state;
+    const { categories, addPostModalOpen, posts, comments, clickedCat, togglePostPage, postToOpen, editPostModalOpen } = this.state;
 
     return (
 
@@ -209,8 +234,16 @@ class App extends Component {
 
 
         <Route exact path='/:comment/:id' render={() => (
-          <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>)} />
-
+          // review 3.3 check whether the path exist before route
+          <div>
+            {console.log(postToOpen)}
+            {postToOpen
+            ? <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>
+            : <Redirect to='/'/>
+            }
+          </div>
+        )} />
+          
 
         <Route exact path='/:routeCat' render={({ match }) => (
           <div className="App">
@@ -235,6 +268,10 @@ class App extends Component {
                 onVoteSelect={(selectedPost, vote) => {
                   this.changePostVote(selectedPost, vote)
                 }}
+                onEditSelect={(selectedPost) => {
+                  //load edit modal
+                  this.openEditPostModal(selectedPost)
+                }}
               />
             </div>
           </div>)} />
@@ -258,6 +295,10 @@ class App extends Component {
                   }}
                   onVoteSelect={(selectedPost, vote) => {
                     this.changePostVote(selectedPost, vote)
+                  }}
+                  onEditSelect={(selectedPost) => {
+                    //load edit modal
+                    this.openEditPostModal(selectedPost)
                   }}
                 />)}
             </div>
@@ -289,6 +330,32 @@ class App extends Component {
             this.closeAddPostModal
           }}>add Post</button>
           <button onClick={this.closeAddPostModal}>cancel</button>
+        </Modal>
+        <Modal
+            //this is the modal of add a edit/delete Post
+            className='modal'
+            overlayClassName='overlay'
+            isOpen={editPostModalOpen}
+            onRequestClose={this.closeEditPostModal}
+            contentLabel='Post Modal'
+        >
+            <h2>Edit Post here </h2>
+            <p>Post by: {postToOpen && postToOpen.author}</p>
+            <input type='text' placeholder='body' defaultValue={postToOpen && postToOpen.title} ref={(input) => this.postTitleInput = input} />
+            <input type='text' placeholder='body' defaultValue={postToOpen && postToOpen.body} ref={(input) => this.postBodyInput = input} />
+
+
+            <button onClick={() => {
+                this.editPost()
+                
+            }}>edit post</button>
+           
+            <button onClick={() => {
+                this.delPost()
+                
+            }}>delete post</button>
+            
+            <button onClick={this.closeEditPostModal}>cancel</button>
         </Modal>
       </div>
 
