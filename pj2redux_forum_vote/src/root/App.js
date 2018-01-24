@@ -233,13 +233,16 @@ class App extends Component {
         {/* {<p>{this.state.posts?this.state.posts.map(i=>(<li key={i['author']}>id: {i.id} title: {i.title} vote: {i.voteScore}</li>)):'not yet fetch...'}</p>} */}
 
 
-        <Route exact path='/:comment/:id' render={() => (
+        <Route exact path='/:comment/:id' render={( { match } ) => (
           // review 3.3 check whether the path exist before route
+          // rewiew 4.2 fix the problem of always redirect even post exist
           <div>
-            {console.log(postToOpen)}
-            {postToOpen
-            ? <Post singlePost={postToOpen} toggle={() => this.switchToMainPage()}></Post>
-            : <Redirect to='/'/>
+            {/* {posts && console.log(posts.some(item=>{return item.id === match.params.id}))} */}
+            {posts?
+              posts.some(item=>{return item.id === match.params.id})
+              ?<Post singlePost={match.params.id} toggle={() => this.switchToMainPage()}></Post>
+              :<Redirect to='/'/>
+            :null
             }
           </div>
         )} />

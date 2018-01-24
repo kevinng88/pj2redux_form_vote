@@ -13,11 +13,13 @@ You can post in different provided topics. Make as many comments as you wish.
 
 ## Loading data from API Server
 
-1. To get data from the API server for the forum app. Please local the server.js in "api-server" directory
+1. installation of server dependencies - Please go to "api-server" folder. Then use "npm install" to install all the necessary files for node server (if no node.js in your computer, please goto "https://nodejs.org/" to intall )
 
-2. use node command "node server.js" top launch the server (if no node.js in your computer, please goto "https://nodejs.org/" to intall )
+2. To get data from the API server for the forum app. Please local the server.js in "api-server" directory
 
-3. Refresh the react app to fetch the new data
+3. use node command "node server.js" top launch the server 
+
+4. Refresh the react app to fetch the new data
 
 ## Contributing
 
